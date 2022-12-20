@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="styles.css"
+</head>
+<body>
+	<!-- <h1>Received messages:</h1> -->
+	<div id="container" class="center">
+	</div>
+
+	<div>
+		<canvas id="myChart"></canvas>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<script>
+
+		const ctx = document.getElementById('myChart');
+
+		let labels = []
+
+		const data = {
+			labels: labels,
+			datasets: [
+				{
+					label: 'CPU Load',
+					data: [],
+					fill: false,
+					borderColor: 'rgb(75, 192, 192)',
+					tension: 0.1,
+				},
+				{
+					label: 'Memory Load',
+					data: [],
+					fill: false,
+					borderColor: 'rgb(21, 255, 0)',
+					tension: 0.1,
+				},
+			]
+		};
+
+		const options = {
+			scales: {
+      y: {
+            suggestedMin: 0,
+                suggestedMax: 100
+            }
+        }
+		};
+
+		const config = {
+			type: 'line',
+			data: data,
+			options: options,
+		}
+
+		const chart = new Chart(ctx, 
+			config
+		)
+
+		function addData(chart, label, data_y1, data_y2){
+			chart.data.labels.push(label);
+			chart.data.datasets.forEach((dataset) => {
+				if (dataset.label == 'CPU Load')
+					dataset.data.push(data_y1);
+
+				if (dataset.label == 'Memory Load')
+					dataset.data.push(data_y2);
+			});
+
+			chart.update();
+		}
+
+		function removeData(chart) {
+			chart.data.labels.shift();
+			chart.data.datasets.forEach((dataset) => {
+				dataset.data.shift();
+			});
+
+			chart.update();
+		}
+
+		var container = document.getElementById("container")
+		var source = new EventSource('http://localhost:5000/sse')
+
+		source.onopen = function(event){
+			console.log("connected", event)
+		}
+
+		source.onerror = function(event){
+			console.log("error", event)
+		}
+
+		source.onmessage = function(event){
+			const p = document.createElement("p")
+			const text = document.createTextNode(event.data)
+
+			console.log(text.data)
+
+			/*	
+			JSON.parse(text.data, 
+				(key, value) => {
+					console.log(key)
+					console.log(value)
+			})
+			*/
+
+
+			let pc = JSON.parse(text.data)
+
+			if (labels.length == 0) {
+				p.appendChild(document.createTextNode("OS Arch: " + pc.os))
+				container.appendChild(p)
+			}
+
+			if (labels.length <= 5)
+				addData(chart, pc.dateTime, pc.cpuload, pc.memload) 
+
+			if (labels.length > 5)
+				removeData(chart)
+			
+		} 
+
+
+	</script>
+</body>
+</html>
