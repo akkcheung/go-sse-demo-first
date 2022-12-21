@@ -22,7 +22,7 @@ Installation (fly.io):
 
 Reference(s):
 
-[Server-Sent Events with Go and React](https://articles.wesionary.team/server-sent-events-with-go-and-react-76df101a3ef)
+[Server-Sent Events with Go and React](https://articles.wesionary.team/server-sent-events-with-go-and-react-76df101a3efe)
 
 [Infinite looping with vs without time.Sleep](https://stackoverflow.com/questions/55858835/infinite-looping-with-vs-without-time-sleep)
 
