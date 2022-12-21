@@ -1,15 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"log"
+	"math"
 	"net/http"
+	"os"
+	"runtime"
 	"strings"
 	"time"
-	"encoding/json"
-	"runtime"
-	"math"
-	"log"
 
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
@@ -85,8 +86,14 @@ func main(){
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./public"))))
 
-	fmt.Println("Listening to 5000")
-	http.ListenAndServe(":5000", nil)
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "8080"
+	}
+
+	fmt.Println("Listening to " + port)
+	http.ListenAndServe(":" + port, nil)
 
 }
 

@@ -82,7 +82,8 @@
 		}
 
 		var container = document.getElementById("container")
-		var source = new EventSource('http://localhost:5000/sse')
+		// var source = new EventSource('http://localhost:8080/sse')
+		var source = new EventSource(location.protocol + "//" + location.hostname + ":" + location.port + "/sse")
 
 		source.onopen = function(event){
 			console.log("connected", event)
