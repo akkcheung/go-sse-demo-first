@@ -1,5 +1,5 @@
 
-This is dashboard display cpu and memory load in real-time using Golang, vanilla JS , chartjs library
+Dashboard to display cpu and memory load in real-time using Golang, vanilla JS , chartjs library.
 
 General features:
 
